@@ -25,3 +25,8 @@ a:active {
 a:hover {
   color: #2E8AE6;
 }
+
+img.icon {
+  width: 26px;
+  height: auto;
+}
