@@ -1,1 +1,5 @@
-http://mikebarkas.github.io
+http://barkas.com
+http://barkas.com/2016/change-python-version-in-virtualenvwrapper/
+http://barkas.com/2016/set-environment-variables-activating-virtualenv/
+http://barkas.com/2016/custom-urls-with-pelican/
+http://barkas.com/2015/getting-started-with-vim/
