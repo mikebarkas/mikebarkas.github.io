@@ -4,3 +4,4 @@ http://barkas.com/2016/set-environment-variables-activating-virtualenv/
 http://barkas.com/2016/custom-urls-with-pelican/
 http://barkas.com/2015/getting-started-with-vim/
 http://barkas.com/2016/different-versions-of-python/
+http://barkas.com/2016/customize-your-git-log-output/
