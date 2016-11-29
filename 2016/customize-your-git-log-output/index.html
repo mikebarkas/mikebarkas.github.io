@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Customizing Git Log Output</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/theme/css/clean-blog.css" rel="stylesheet">
+            <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="How to format your Git log output.">
+
+        <meta name="author" content="Mike Barkas">
+
+        <meta name="tags" content="git">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Mike Barkas">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/mike-barkas.html">
+	<meta property="og:url" content="/2016/customize-your-git-log-output">
+	<meta property="og:title" content="Customizing Git Log Output">
+	<meta property="article:published_time" content="2016-11-01 00:00:00-04:00">
+            <meta property="og:description" content="How to format your Git log output.">
+
+            <meta property="og:image" content="/theme/images/post-bg.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Mike Barkas</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/tags.html">tags</a></li>
+
+                            <li><a href="/about-mike-barkas-software-developer">About</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Customizing Git Log Output</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/mike-barkas.html">Mike Barkas</a>
+                             on Tuesday November 01, 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <div class="section" id="git-log">
+<h2>Git Log</h2>
+<p>The <code>git log</code> command provides information regarding the history of the
+repository. There is a lot of history information that can be accessed using the
+log command and there is many options to format and filter this information.</p>
+<p>The normal output of the log command shows the author, date, and commit
+information on multiple lines.</p>
+<p>In this article I describe a few of the methods I use to display commit history
+information in a few different ways.</p>
+<p>I will start by describing a few of the options available and then describe how
+I use a couple of them.</p>
+<hr class="docutils" />
+<p>The two broad categories described below are <em>built-in formatting</em> and <em>custom
+formatting</em>.</p>
+<div class="section" id="built-in-formatting">
+<h3>Built-in Formatting</h3>
+<p>There are options you can use via the command line to use the built-in log
+formatting to display commonly used output.</p>
+<p><strong>One line</strong> <br/> The <code>--oneline</code> option reduces the commit information to one line of abbreviated
+information. This is helpful to get a quick overview of recent repository
+information.</p>
+<div class="highlight"><pre><span></span>git log --oneline
+
+a90b071 Fixup typo in readme file.
+2f5276b Update readme description.
+a21337a Set spacing to align text output.
+5829ca9 Merge pull request #1 from repository/branch
+fdf62a4 First commit.
+</pre></div>
+<p><strong>Decorate</strong> <br/> The <code>--decorate</code> option will display branch and tag
+information. It is very common to combine the above <em>oneline</em> command above
+with the <em>decorate</em> option.</p>
+<div class="highlight"><pre><span></span>git log --oneline --decorate
+
+a90b071 (HEAD -&gt; master, origin/master) Fixup typo in readme file.
+2f5276b Update readme description.
+a21337a (tag: your-tag) Set spacing to align text output.
+5829ca9 Merge pull request #1 from repository/branch
+fdf62a4 First commit.
+</pre></div>
+<p><strong>Graph</strong> <br/> The <code>--graph</code> option will give you a visual representation
+of the branches and how they were merged together. The graph only shows ASCII
+characters creating lines and asterisk, but it is enough to create a visual
+reference that is easy to understand.</p>
+<div class="highlight"><pre><span></span>git log --oneline --graph
+
+* a90b071 Fixup readme file.
+* 2f5276b Improve readme.
+* a21337a Set spacing to align text output.
+*   5829ca9 Merge pull request #1 from repository/branch
+|\
+| * fdf62a4 Experiment with branch name.
+| * df77cdc Change shell declaration.
+|/
+* f958f93 Start branch loop.
+* 6f4fd45 Git comment notes for use.
+* e4b884f Start bash file.
+* e68d143 First commit.
+</pre></div>
+<p><strong>Diffs</strong> <br/> There are a lot of options for displaying diffs in your
+commit history. The two most common options are the <code>-p</code> option, for
+patch, and the <code>--stat</code> option for showing stats of inserted and deleted
+code.</p>
+<div class="highlight"><pre><span></span>git log --stat
+
+* a90b071 (HEAD -&gt; master, origin/master) Fixup readme file.
+|  README.md | 3 +++
+|  1 file changed, 3 insertions(+)
+* 2f5276b Improve readme file content.
+|  README.md | 5 +++++
+|  1 file changed, 5 insertions(+)
+* a21337a Set spacing to align text output.
+|  branches.sh | 4 ++--
+|  1 file changed, 2 insertions(+), 2 deletions(-)
+*   5829ca9 Merge pull request #12 from repository/branch
+|\
+| * e57ba7a Changed while loop to a for in.
+| |  branches.sh | 19 +++++++++----------
+| |  1 file changed, 9 insertions(+), 10 deletions(-)
+| * fdf62a4 Change with branch name.
+| |  branches.sh | 11 +++++------
+| |  1 file changed, 5 insertions(+), 6 deletions(-)
+| * df77cdc Change shell declaration.
+|/
+|    branches.sh | 2 +-
+|    1 file changed, 1 insertion(+), 1 deletion(-)
+* a68ff57 Start readme file.
+|  README.md | 2 ++
+|  1 file changed, 2 insertions(+)
+* f958f93 Start branch loop.
+|  branches.sh | 11 +++++++++++
+|  1 file changed, 11 insertions(+)
+</pre></div>
+<p><strong>Shortlog</strong> <br/> The <code>shortlog</code> command will group commits by author and
+display a short commit message. This is a command to be used instead of the
+<em>log</em> command. You can sort the output by number of commits per author using the
+<code>-n</code> option.</p>
+<div class="highlight"><pre><span></span>git shortlog
+
+Mary Smith (4):
+    First commit.
+    Start binary file.
+    Git comment notes for use in readme.
+    Edit readme file.
+
+Joe Willis (3)
+    Add method callback.
+    Delete unused variable.
+    Fix typo.
+</pre></div>
+</div>
+<div class="section" id="custom-formatting">
+<h3>Custom formatting</h3>
+<p>If you don't like the built-in formatting options, or just want to create
+additional output information, you can customize your own log output format.</p>
+<p>Create your custom output by using the <code>--pretty</code> option and use
+<code>format:&quot;string&quot;</code>. The format string may be enclosed in quotes and
+can contain replacement placeholders.</p>
+<blockquote>
+<p>Replacements examples:</p>
+<p><code>%cn</code> will give you committer name <br/>
+<code>%h</code> will display the commit hash <br/>
+<code>%cd</code> will show the commit date</p>
+</blockquote>
+<p>Using the placeholders above in an example for git log with custom formatting.</p>
+<div class="highlight"><pre><span></span>git log --pretty=format:&quot;%h - %cn made this commit on %cd&quot;
+
+a90b071 - Mary Smith made this commit on Thu Dec 17 23:18:07 2015 -0500
+2f5276b - Mary Smith made this commit on Thu Dec 17 23:18:07 2015 -0500
+a21337a - Mary Smith made this commit on Thu Dec 17 23:04:20 2015 -0500
+5829ca9 - Mary Smith made this commit on Mon Nov 9 21:37:06 2015 -0500
+fdf62a4 - Mary Smith made this commit on Mon Nov 9 20:24:32 2015 -0500
+a68ff57 - Mary Smith made this commit on Mon Nov 9 19:23:39 2015 -0500
+f958f93 - Mary Smith made this commit on Fri Sep 25 17:22:48 2015 -0400
+e4b884f - Mary Smith made this commit on Fri Sep 25 17:02:40 2015 -0400
+</pre></div>
+<p>There are many placeholder tokens available to create your custom log
+output. See the Git log documentation for all options.</p>
+<p>You can also combine your custom format and built-in options.</p>
+<div class="highlight"><pre><span></span>git log --oneline --pretty=format:&quot;%h - %cn made this commit on %cd&quot;`
+</pre></div>
+<p><strong>Color</strong> <br/> You can use basic colors in you custom output as well. Check
+your color setting in your Git config for options.</p>
+<p>Color token examples:</p>
+<blockquote>
+<code>%Cred</code> switch color to red <br/>
+<code>%Cgreen</code> switch color to green <br/>
+<code>%Cblue</code> switch color to blue <br/>
+<code>%Creset</code> reset color <br/></blockquote>
+<p>Remember to turn off a color, using reset, after you are finished to return your
+terminal color back to normal.</p>
+<p>Changing log output color example:</p>
+<div class="highlight"><pre><span></span>git log --pretty=format:&quot;%C(green)[%h]%Creset %gd %s %C(yellow)(%cr)%Creset&quot;
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="filtering">
+<h2>Filtering</h2>
+<p>By default Git will show all commit history in your log output. After a short
+amount of time, this will display too much information.</p>
+<p><strong>Count</strong> <br/> Reduce the amount of history shown with your log output with a number option
+like: <code>-5</code>. This will limit the output to only show the last 5 commits.</p>
+<p>Example to only show 5 commits and a built-in option:</p>
+<div class="highlight"><pre><span></span>git log --online -5
+</pre></div>
+<p><strong>Date</strong> <br/> You can filter by date using different date expressions.</p>
+<div class="highlight"><pre><span></span>git log --after=&quot;2012-11-1&quot;
+git log --since=&quot;1 year ago&quot;
+</pre></div>
+<p><strong>File</strong> <br/> You can filter by file(s) by listing the file name(s). Important
+note to remember to use the <code>--</code> flag to indicate the following are file
+names and not branch names.</p>
+<div class="highlight"><pre><span></span>git log -- product_models.py
+</pre></div>
+<p><strong>Message</strong> <br/> To filter commit messages use the <code>--grep</code> option.</p>
+<div class="highlight"><pre><span></span>git log --grep=&quot;Issue 42&quot;
+</pre></div>
+<p><strong>Content</strong> <br/> You can search and filter the source code for a particular
+string by using the <code>-S&quot;your string&quot;</code> option. This is also know as
+<strong>pickaxe</strong>.</p>
+<div class="highlight"><pre><span></span>git log -S&quot;variable = 42&quot;
+</pre></div>
+<p>There are many options for filtering by date, file, range, and branches. Check
+the Git documentation of all the options.</p>
+<hr class="docutils" />
+<p><strong>Configuration</strong> <br/> Many of the default configurations for the log output
+can be changed or set via your <code>gitconfig</code> file.</p>
+<p><strong>Alias</strong> <br/> Once you have created a few custom log formatting commands, it
+makes it much easier to recall them if you create an alias for them.</p>
+<p>You can create an alias in your <code>gitconfig</code> file by using the keyword
+<code>[alias]</code>. You can also create a shell alias for your favorite commands.</p>
+<p>I personally use a shell alias so I can also include the <em>git</em> in my command.</p>
+<p>Here is an example of the four log commands I use most often set up in my shell
+as an alias:</p>
+<p><code>gl</code></p>
+<p>My standard <em>git log</em> limited by 10-12 commits so it fits in my Tmux pane
+nicely.</p>
+<div class="highlight"><pre><span></span>alias gl=&#39;git log --oneline --graph --decorate -12&#39;
+</pre></div>
+<p><code>gll</code></p>
+<p>This is my <em>git log long</em> alias to display more information and use color.</p>
+<div class="highlight"><pre><span></span>alias gll=&#39;git log --pretty=format:&quot;%C(green)[%h]%Creset %gd %s
+%C(yellow)(%cr)%Creset %C(cyan)%cn%Creset&quot; --graph&#39;
+</pre></div>
+<p><code>glp</code></p>
+<p>My alias for <em>git log people</em> to use the output of <em>shortlog</em>.</p>
+<div class="highlight"><pre><span></span>alias glp=&#39;git shortlog&#39;
+</pre></div>
+<p><code>gls</code></p>
+<p>This is what I call <em>git log stats</em>.</p>
+<div class="highlight"><pre><span></span>alias gls=&#39;git log --oneline --graph --decorate --stat&#39;
+</pre></div>
+<div class="section" id="summary">
+<h3>Summary</h3>
+<p>Use the buit-in log formats and experiment creating your own custom log
+commands.</p>
+<p>Create a shortcut or alias for the commands you use most often.</p>
+<p>Consult the Git documentation for the many options available.</p>
+</div>
+</div>
+
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/git.html">git</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://bitbucket.org/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-bitbucket fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://instagram.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/mike_barkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://linkedin.com/in/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Site powered by <a href="http://getpelican.com" target="_blank">Pelican</a>,
+    and <a href="http://python.org" target="_blank">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-18772830-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+
+</html>
