@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Python Exceptions</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/theme/css/clean-blog.css" rel="stylesheet">
+            <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="Basic overview of Python exceptions">
+
+        <meta name="author" content="Mike Barkas">
+
+        <meta name="tags" content="python">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Mike Barkas">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/mike-barkas.html">
+	<meta property="og:url" content="/2017/python-exceptions-overview">
+	<meta property="og:title" content="Python Exceptions">
+	<meta property="article:published_time" content="2017-01-02 00:00:00-05:00">
+            <meta property="og:description" content="Basic overview of Python exceptions">
+
+            <meta property="og:image" content="/theme/images/post-bg.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Mike Barkas</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/tags.html">tags</a></li>
+
+                            <li><a href="/about-mike-barkas-software-developer">About</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Python Exceptions</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/mike-barkas.html">Mike Barkas</a>
+                             on Monday January 02, 2017
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <div class="section" id="basic-overview-of-python-exceptions">
+<h2>Basic Overview of Python Exceptions</h2>
+<p>One of the major error types in Python are <em>exceptions</em>.</p>
+<p>Not including <em>syntax errors</em>, errors that are encountered when your program
+runs, are called <em>exceptions</em> and if no handler for this error is found, it
+will be an <em>unhandled exception</em> and this will stop your program.</p>
+<p>You can guard against exceptions stopping your program by wrapping the code
+that may cause the issue with a <code>try/except</code> statement.</p>
+<p>The basic idea is to <em>try</em> the code you think may cause an error, and if it
+does cause an error, handle the exception with <em>except</em> and then you can change the flow of your code or logic.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+  <span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file_name.txt&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="s1">&#39;File not found&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The code example above specifically checks for an input output error using the
+<code>IOError</code> exception class. If the file cannot be opened, show a message
+to the user.</p>
+<p>You can also handle different types of exceptions with multiple <em>except</em>
+clauses.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+  <span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file_name.txt&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="s1">&#39;File not found&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Data must be an integer&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The examples above are only to show exception syntax examples. There
+are additional clauses, you can use <em>except</em> clauses, <em>else</em> clause,
+and a <em>finally</em> clause that is always executed.</p>
+</div>
+<div class="section" id="exception-inheritance-hierarchy">
+<h2>Exception Inheritance Hierarchy</h2>
+<p>Exceptions are basically classes that handle a specific type of error and are
+set in a hierarchy. These are called <em>built-in exceptions</em>.</p>
+<p>The first class that all other exception classes are built on is the
+<code>BaseException</code> class. Other exception classes extend this class and
+provide specific error checking. Two examples that directly extend the base
+class are <code>SystemExit</code> and <code>KeyboardInterrupt</code>.</p>
+<p>Another exception class that is derived from the base class is the
+<code>Exception</code> class. This class has many sub-classes. Two examples are
+<code>ImportError</code> and <code>ValueError</code>. There are many others, check the
+Python documentation for your interpreter version.</p>
+</div>
+<div class="section" id="specifying-exception-handlers">
+<h2>Specifying Exception Handlers</h2>
+<p>When handling exceptions in your code, if you don't specify an exception class
+you will handle all exceptions. If you don't handle these classes properly this will cause problems with your program
+including Python itself. If you catch all exceptions you will be removing
+<code>SystemExit</code> and <code>KeyboardInterrupt</code>.</p>
+<p>Bad example:</p>
+<div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+  <span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file_name.txt&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+  <span class="k">continue</span>
+</pre></div>
+<p>Handling all exceptions from the <code>Exception</code> class is also not a good idea
+because you will be hiding many exceptions that find common mistakes like
+<code>SyntaxError</code> and <code>NameError</code> exceptions. Try to find a specific error type you
+want to check for in your code.</p>
+<p>When you specify an exception class in an <em>except</em> statement, all exceptions
+that are sub-classes of that class will also be caught.</p>
+<p>Use the <em>method resolution order</em> method to help determine base classes with
+<code>mro()</code>.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="ne">ValueError</span><span class="o">.</span><span class="n">mro</span><span class="p">()</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="nb">type</span> <span class="s1">&#39;exceptions.ValueError&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s1">&#39;exceptions.StandardError&#39;</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="o">&lt;</span><span class="nb">type</span> <span class="s1">&#39;exceptions.Exception&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nb">type</span> <span class="s1">&#39;exceptions.BaseException&#39;</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="o">&lt;</span><span class="nb">type</span> <span class="s1">&#39;object&#39;</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="creating-a-custom-exception">
+<h2>Creating A Custom Exception</h2>
+<p>When creating a custom exception class it is recommended to sub-class
+the <code>Exception</code> class. This will inherit all the necessary functionality
+from the base class <code>Exception</code>.</p>
+<p>This will provide the minimum needed to have a custom exception class name.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyCustomError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+  <span class="k">pass</span>
+</pre></div>
+<p>Then use this custom exception class in your function definition:</p>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">variable_one</span> <span class="o">&gt;</span> <span class="n">variable_two</span><span class="p">:</span>
+  <span class="k">raise</span> <span class="n">MyCustomError</span><span class="p">(</span><span class="s1">&#39;Custom error message&#39;</span><span class="p">)</span>
+</pre></div>
+<p>You can also override the <code>__init__()</code> in your custom exception class to
+provide a custom error message.</p>
+</div>
+<div class="section" id="exception-payloads">
+<h2>Exception Payloads</h2>
+<p>Exception objects will contain information of why the exception happened. Most
+exceptions will accept a single string as their payload. You can supply a more
+informative error message as a single string argument when you handle an
+exception.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Value must be greater than 5&#39;</span><span class="p">)</span>
+</pre></div>
+<p>Access the exception payload via the <code>args</code> attribute or convert the exception
+message to a string <code>str(e)</code> then print the message.</p>
+<p>Some exceptions have additional attributes that can provide more information,
+<cite>UnicodeError</cite> for example.</p>
+</div>
+<div class="section" id="raising-exceptions">
+<h2>Raising Exceptions</h2>
+<p>Raising an exception in your code is done by the keyword <em>raise</em> and then
+specify the exception class.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">variable</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+  <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Provide a value&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="exception-chaining">
+<h2>Exception Chaining</h2>
+<p><strong>Implicit chaining</strong>: One exception causes another exception.</p>
+<p>The first exception’s information is available in the stack trace because it is
+stored in the <code>__context__</code> attribute of the last exception class.</p>
+<p><strong>Explicit chaining</strong>: Associate a new exception when an exception is raised.</p>
+<p>Used to translate one exception type to another. The original exception type is
+stored in the <code>__cause__</code> attribute.</p>
+<p>This is done with the <code>from</code> keyword with the new exception name.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CustomError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+  <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">math</span><span class="p">()</span>
+  <span class="k">except</span> <span class="ne">ZeroDivisionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">CustomError</span><span class="p">(</span><span class="s1">&#39;Custom error message&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+</pre></div>
+<p>The first exception is defined as <code>e</code> and then the second exception is
+<code>from e</code>.</p>
+</div>
+<div class="section" id="traceback">
+<h2>Traceback</h2>
+<p>Traceback information can be found on an exception class in the
+<code>__traceback__</code> attribute.</p>
+<hr class="docutils" />
+<p>I tried to keep this article a simple over view of some of the basics with
+Python exceptions. There are many more details and customization options you
+can learn more about in the Python documentation.</p>
+</div>
+
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/python.html">python</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://bitbucket.org/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-bitbucket fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://instagram.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/mike_barkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://linkedin.com/in/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Site powered by <a href="http://getpelican.com" target="_blank">Pelican</a>,
+    and <a href="http://python.org" target="_blank">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-18772830-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+
+</html>
