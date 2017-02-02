@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Python Argument Syntax</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/theme/css/clean-blog.css" rel="stylesheet">
+            <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="Overview of argument syntax for Python functions and objects, including what are *args and **kwargs for parameters and arguments.">
+
+        <meta name="author" content="Mike Barkas">
+
+        <meta name="tags" content="python">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Mike Barkas">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/mike-barkas.html">
+	<meta property="og:url" content="/2017/python-argument-syntax">
+	<meta property="og:title" content="Python Argument Syntax">
+	<meta property="article:published_time" content="2017-02-02 00:00:00-05:00">
+            <meta property="og:description" content="Overview of argument syntax for Python functions and objects, including what are *args and **kwargs for parameters and arguments.">
+
+            <meta property="og:image" content="/theme/images/post-bg.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Mike Barkas</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/tags.html">tags</a></li>
+
+                            <li><a href="/about-mike-barkas-software-developer">About</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Python Argument Syntax</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/mike-barkas.html">Mike Barkas</a>
+                             on Thursday February 02, 2017
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <div class="section" id="argument-syntax">
+<h2>Argument Syntax</h2>
+<p>This article is an overview of how arguments can be defined and used with
+Python <em>callables</em>. The general term <em>callables</em> means something that can be
+called like a function, method, or object.</p>
+<p>An <strong>argument</strong> is the value passed into a callable (function or method). The
+function should consume these values in the function body.</p>
+<p>There are two types of arguments: <br/>
+<strong>Positional argument</strong> - a single value: <code>my_function(42)</code> <br/>
+the <code>42</code> is the positional argument.</p>
+<p><strong>Keyword argument</strong> - are identified by a name:
+<code>my_function(size='large')</code> <br/>
+the keyword argument has a <em>name</em> and <em>value</em> <code>size='large'</code></p>
+<p>There are two ways arguments are used: <br/>
+<strong>Formal arguments</strong> - arguments defined in the function definition <br/>
+<strong>Actual arguments</strong> - arguments supplied at the function call site</p>
+<p>Arguments can be expressed in multiple ways:<br/>
+<code>arg</code> - a single argument value <br/>
+<code>*args</code> - a series of argument values <br/>
+<code>**kwargs</code> - a series of keyword argument values</p>
+<p>For arbitrary argument lists, the use of <code>*</code> and <code>**</code> is the syntax
+to use and the <em>names</em> <code>args</code> and <code>kwargs</code> is only a convention used
+and not required. You can use your own <em>names</em> if it makes your code more
+explicit, for example: <code>*points</code> or <code>**teams</code> for sports-ball.</p>
+<p>The <code>*args</code> and <code>**kwargs</code> are used to consume arbitrary lists of
+arguments of unknow length. Like a catch-all of extra arguments passed into a
+function or method.</p>
+<hr class="docutils" />
+<div class="section" id="formal-arguments">
+<h3>Formal Arguments</h3>
+<p>The order of arguments is important. Positional arguments will be first, then
+star args (<code>*args</code>), and last is keyword args (<code>**kwargs</code>).</p>
+<p>The best way to understand this is with examples.</p>
+<p>My functions below are to demonstrate how the function interprets the
+arguments, and not what the function actually does. The example functions print
+the arguments sent into them.</p>
+<p><strong>Example</strong>: <br/>
+Two positional arguments the function requires, then an unknow list of
+arguments.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Function definition.</span>
+<span class="k">def</span> <span class="nf">print_args</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">arg2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+
+<span class="c1"># Function being called.</span>
+<span class="n">print_args</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+
+
+<span class="c1"># Function output.</span>
+<span class="mi">1</span>
+<span class="mi">2</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># *args</span>
+</pre></div>
+<p><strong>Example</strong> <br/>
+Using star args (<code>*args</code>) to consume an unkown length of arguments. The
+arguments will be a tuple available in the function.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Function definition.</span>
+<span class="k">def</span> <span class="nf">print_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+
+<span class="c1"># Function being called.</span>
+<span class="n">print_args</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Function output.</span>
+<span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="nc">tuple</span><span class="o">&gt;</span>
+
+<span class="c1"># Function being called.</span>
+<span class="n">print_args</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Function output.</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="nc">tuple</span><span class="o">&gt;</span>
+</pre></div>
+<p><strong>Example</strong> <br/>
+Keyword arguments being used after star args (<code>*args</code>).</p>
+<div class="highlight"><pre><span></span><span class="c1"># Function definition.</span>
+<span class="k">def</span> <span class="nf">print_args</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">kwarg1</span><span class="p">,</span> <span class="n">kwarg2</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">arg2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">kwarg1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">kwarg2</span><span class="p">)</span>
+
+<span class="c1"># Function being called.</span>
+<span class="n">print_args</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">kwarg2</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># Function output.</span>
+<span class="mi">1</span>
+<span class="mi">2</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># *args</span>
+<span class="mi">7</span>             <span class="c1"># kwarg1</span>
+<span class="mi">8</span>             <span class="c1"># kwarg2</span>
+</pre></div>
+<p><strong>Example</strong> <br/>
+Using keyword args allows for named arguments and will be a dictionary
+available in the function body.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Function definition.</span>
+<span class="k">def</span> <span class="nf">named_args</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="c1"># Function being called.</span>
+<span class="n">named_args</span><span class="p">(</span><span class="n">one</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">two</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">three</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">)</span>
+
+<span class="c1"># Function output.</span>
+<span class="p">{</span><span class="s1">&#39;one&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">:</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">}</span>
+</pre></div>
+<p><strong>Example</strong> <br/>
+Arbitrary keyword arguments will be the last argument and will be a dictionary
+that is available in the function body.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Function definition.</span>
+<span class="k">def</span> <span class="nf">print_args</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">kwarg1</span><span class="p">,</span> <span class="n">kwarg2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+   <span class="k">print</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span>
+   <span class="k">print</span><span class="p">(</span><span class="n">arg2</span><span class="p">)</span>
+   <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+   <span class="k">print</span><span class="p">(</span><span class="n">kwarg1</span><span class="p">)</span>
+   <span class="k">print</span><span class="p">(</span><span class="n">kwarg2</span><span class="p">)</span>
+   <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="c1"># Function being called.</span>
+<span class="n">print_args</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">kwarg2</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">kwarg3</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">kwarg4</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Function output.</span>
+<span class="mi">1</span>
+<span class="mi">2</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># *args</span>
+<span class="mi">7</span>             <span class="c1"># kwarg1</span>
+<span class="mi">8</span>             <span class="c1"># kwarg2</span>
+<span class="p">{</span><span class="s1">&#39;kwarg4&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;kwarg3&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">}</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="actual-arguments">
+<h3>Actual Arguments</h3>
+<p>The <code>*</code> at the call site is used a little different and does not have the same syntax as the function definition.</p>
+<p>The asterisk prefix instructs Python to unpack the series (list, dict, tuple, etc.) when the argument data is sent into the function.</p>
+<p><strong>Example</strong> <br/>
+A single <code>*</code> can be used at the call site for a series of arguments.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Function definition.</span>
+<span class="k">def</span> <span class="nf">print_args</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">arg2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+<span class="c1"># Data structure that needs to be sent to the function.</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+
+<span class="c1"># Function being called with * to pack arguments.</span>
+<span class="n">print_args</span><span class="p">(</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+
+<span class="c1"># Function output.</span>
+<span class="mi">1</span>
+<span class="mi">2</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># *args</span>
+</pre></div>
+<p><strong>Example</strong> <br/>
+Using two asterisks <code>**</code> you can pack keyword arguments (<em>name=value</em>)
+and send them into the function.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Function definition.</span>
+<span class="k">def</span> <span class="nf">order_info</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;quantity =&#39;</span><span class="p">,</span> <span class="n">quantity</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;size =&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="c1"># Data structure that needs to be sent to the function.</span>
+<span class="n">order</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;quantity&#39;</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;customer_id&#39;</span><span class="p">:</span><span class="mi">112</span><span class="p">}</span>
+
+<span class="c1"># Function being called with ** to pack arguments.</span>
+<span class="n">order_info</span><span class="p">(</span><span class="o">**</span><span class="n">order</span><span class="p">)</span>
+
+<span class="c1"># Function output.</span>
+<span class="n">quantity</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="p">{</span><span class="s1">&#39;customer_id&#39;</span><span class="p">:</span> <span class="mi">112</span><span class="p">}</span>
+</pre></div>
+<hr class="docutils" />
+<p><strong>Default values</strong></p>
+<p>You can provide a default value for an argument in the function definition.</p>
+<p>This will allow the caller of the function to optionally provide a value. If
+they don't provide a value, the default will be used.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Function definition.</span>
+<span class="k">def</span> <span class="nf">customer_report</span><span class="p">(</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">products</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Function being used without a products value.</span>
+<span class="n">customer_report</span><span class="p">(</span><span class="mi">112</span><span class="p">)</span>
+
+<span class="c1"># Function being used with an optional products value.</span>
+<span class="n">customer_report</span><span class="p">(</span><span class="mi">112</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;shoes&#39;</span><span class="p">,</span> <span class="s1">&#39;pants&#39;</span><span class="p">])</span>
+</pre></div>
+<hr class="docutils" />
+<p><strong>Parameter vs. Argument</strong></p>
+<p>The terms parameter and argument are sometimes used interchangably, but there
+is a technical difference.</p>
+<p>The parameter is the name used in the function definition and the argument is
+the value passed into the function from the call site.</p>
+<hr class="docutils" />
+<p>The function examples in this article are simple functions with no real
+functionality. Their purpose is to display how the arguments are handled in the
+function body. The examples also can be applied to arguments passed to methods.</p>
+<p>I wrote this article as an overview of basic argument syntax to help beginner
+programmers and is not an exhaustive list of all argument possibilities.</p>
+</div>
+</div>
+
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/python.html">python</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://bitbucket.org/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-bitbucket fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://instagram.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/__barkas__" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://linkedin.com/in/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Site powered by <a href="http://getpelican.com" target="_blank">Pelican</a>
+    and <a href="http://python.org" target="_blank">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-18772830-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+
+</html>

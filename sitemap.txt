@@ -7,3 +7,4 @@ http://barkas.com/2016/different-versions-of-python/
 http://barkas.com/2016/customize-your-git-log-output/
 http://barkas.com/2016/setup-postgres-travis-django/
 http://barkas.com/2017/python-exceptions-overview/
+http://barkas.com/2017/python-argument-syntax/
