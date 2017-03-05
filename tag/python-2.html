@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-            <meta charset="utf-8">
+        <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-        <title>Running Different Versions of Python</title>
+        <title>Mike Barkas - Tag python 2</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
@@ -27,28 +27,8 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-
-
-        <meta name="description" content="How I install and use different verisons of Python.">
-
-        <meta name="author" content="Mike Barkas">
-
-        <meta name="tags" content="python 2">
-        <meta name="tags" content="python 3">
-        <meta name="tags" content="pypy">
-        <meta name="tags" content="virtualenv">
-
-	                <meta property="og:locale" content="">
+                <meta property="og:locale" content="">
 		<meta property="og:site_name" content="Mike Barkas">
-
-	<meta property="og:type" content="article">
-            <meta property="article:author" content="/author/mike-barkas.html">
-	<meta property="og:url" content="/2016/different-versions-of-python">
-	<meta property="og:title" content="Running Different Versions of Python">
-	<meta property="article:published_time" content="2016-10-26 00:00:00-04:00">
-            <meta property="og:description" content="How I install and use different verisons of Python.">
-
-            <meta property="og:image" content="/theme/images/post-bg.jpg">
 </head>
 
 <body>
@@ -80,18 +60,12 @@
         <!-- /.container -->
     </nav>
 
-    <!-- Page Header -->
-        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <header class="intro-header" style="background-image: url('/theme/images/home-bg.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="post-heading">
-                        <h1>Running Different Versions of Python</h1>
-                        <span class="meta">Posted by
-                                <a href="/author/mike-barkas.html">Mike Barkas</a>
-                             on Wednesday October 26, 2016
-                        </span>
-                        
+                    <div class="page-heading">
+                        <h1>Tag python 2</h1>
                     </div>
                 </div>
             </div>
@@ -102,65 +76,43 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-    <!-- Post Content -->
-    <article>
-        <div class="section" id="install-and-run-different-python-interpreters">
-<h2>Install and Run Different Python Interpreters</h2>
-<p>Your operating system comes with a specific version of Python. At the time of
-this writing, the version is probably around 2.7.</p>
-<p>It is best to not change this version as some system links my depend on this
-version of Python. If you move or edit your default version, you may cause
-other programs in your system to not work properly.</p>
-</div>
-<div class="section" id="homebrew">
-<h2>Homebrew</h2>
-<p>With <em>brew</em> you can install Python version 2 and 3, but may only be able to get 3.3 or whatever
-is available to tap at the time. Many times <em>brew</em> version will be not the most current.
-Also when installing with <em>brew</em> you are installing the version system wide and this makes it difficult to easily switch interpreter types and versions for different project requirements.</p>
-<p>There are tools and utilities to help with installing and running different
-versions of Python. I had issues getting them to work properly for me, and
-sometimes they were too complicated. I have tried <code>pythonz</code> and also
-<code>pyenv</code>. Using these tools along with <em>virtualenvwrapper</em> I had the most
-success with <code>pyenv</code>.</p>
-<p>For my Python version management, I combine two tools, <code>pyenv</code> and <code>virtualenvwrapper</code>.</p>
-</div>
-<div class="section" id="pyenv">
-<h2>Pyenv</h2>
-<p>I use <code>pyenv</code> to download and update the different versions of Python
-interpreters and that is all I use it for. Setting up <em>pyenv-virtualenvwrapper</em> and its
-configuration was a little too involved.</p>
-<p>After downloading a few versions of Python interpreters, I will have the
-following directories:</p>
-<p><code>~/.pyenv/versions/3.4.3</code></p>
-<p><code>~/.pyenv/versions/pypy-4.0.0</code></p>
-<p>In each of the above directories there will be a <code>bin</code> directory
-containing the executable.</p>
-</div>
-<div class="section" id="virtualenvwrapper">
-<h2>Virtualenvwrapper</h2>
-<p>Now I can use <code>virtualenvwrapper</code> and the above directory with the
-<code>-p</code> flag to specify the Python version.</p>
-<p>I create a differenct virtualenv for each Python version I need for a project.</p>
-<p>Examples:</p>
-<p><code>mkproject -p ~/.pyenv/versions/3.4.3/bin/python3.4 ENVNAME</code></p>
-<p><code>mkproject -p ~/.pyenv/versions/pypy-4.0.0/bin/pypy ENVNAME</code></p>
-</div>
-<div class="section" id="summary">
-<h2>Summary</h2>
-<p>I like to use <code>pyenv</code> to download and maintain different Python
-interpreters and their versions.</p>
-<p>I then use <code>virtualenvwraper</code> to create virtualenvs with the downloaded
-interpreters.</p>
-</div>
-
-    </article>
-
-        <div class="tags">
-            <p>tags: <a href="/tag/python-2.html">python 2</a>, <a href="/tag/python-3.html">python 3</a>, <a href="/tag/pypy.html">pypy</a>, <a href="/tag/virtualenv.html">virtualenv</a></p>
+        <div class="post-preview">
+            <a href="/2016/different-versions-of-python" rel="bookmark" title="Permalink to Running Different Versions of Python">
+                <h2 class="post-title">
+                    Running Different Versions of Python
+                </h2>
+            </a>
+                <p class="article-summary">
+                    How I install and use different verisons of Python.
+                </p>
+            <p class="post-meta">Posted by
+                    <a href="/author/mike-barkas.html">Mike Barkas</a>
+                 on Wednesday October 26, 2016
+            </p>
+        </div>
+        <div class="post-preview">
+            <a href="/2016/change-python-version-in-virtualenvwrapper" rel="bookmark" title="Permalink to Change Python Version in an Existing Virtualenv">
+                <h2 class="post-title">
+                    Change Python Version in an Existing Virtualenv
+                </h2>
+            </a>
+                <p class="article-summary">
+                    How to change Python version in existing virtualenvwrapper.
+                </p>
+            <p class="post-meta">Posted by
+                    <a href="/author/mike-barkas.html">Mike Barkas</a>
+                 on Saturday September 10, 2016
+            </p>
         </div>
 
     <hr>
-
+    <!-- Pager -->
+    <ul class="pager">
+        <li class="next">
+        </li>
+    </ul>
+    Page 1 / 1
+    <hr>
             </div>
         </div>
     </div>
