@@ -9,4 +9,5 @@ http://barkas.com/2016/setup-postgres-travis-django/
 http://barkas.com/2017/python-exceptions-overview/
 http://barkas.com/2017/python-argument-syntax/
 http://barkas.com/2017/bootstrap-classes-in-django-forms/
+http://barkas.com/2017/how-to-clear-bash-command-history/
 http://barkas.com/2018/learning-software-development/

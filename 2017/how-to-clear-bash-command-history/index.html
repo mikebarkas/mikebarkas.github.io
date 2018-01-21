@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-        <meta charset="utf-8">
+            <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-        <title>Mike Barkas - Articles in the misc category</title>
+        <title>Remove your terminal history on remote servers</title>
 
         <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
         <link href="/theme/css/clean-blog.css" rel="stylesheet">
@@ -22,8 +22,27 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-                <meta property="og:locale" content="">
+
+
+        <meta name="description" content="How to clear remote Bash command history">
+
+        <meta name="author" content="Mike Barkas">
+
+        <meta name="tags" content="bash">
+        <meta name="tags" content="command-line">
+        <meta name="tags" content="security">
+
+	                <meta property="og:locale" content="">
 		<meta property="og:site_name" content="Mike Barkas">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/mike-barkas.html">
+	<meta property="og:url" content="/2017/how-to-clear-bash-command-history">
+	<meta property="og:title" content="Remove your terminal history on remote servers">
+	<meta property="article:published_time" content="2017-12-02 00:00:00-05:00">
+            <meta property="og:description" content="How to clear remote Bash command history">
+
+            <meta property="og:image" content="/theme/images/post-bg.jpg">
 </head>
 
 <body>
@@ -51,12 +70,17 @@
     </nav>
 
     <!-- Page Header -->
-        <header class="intro-header" style="background-image: url('/theme/images/home-bg.jpg')">
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Articles in the misc category</h1>
+                        <h1>Remove your terminal history on remote servers</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/mike-barkas.html">Mike Barkas</a>
+                             on Saturday December 02, 2017
+                        </span>
+                        
                     </div>
                 </div>
             </div>
@@ -66,44 +90,78 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <div class="post-preview">
-            <a href="/2016/custom-urls-with-pelican" rel="bookmark" title="Permalink to Clean Urls with Pelican">
-                <h2 class="post-title">
-                    Clean Urls with Pelican
-                </h2>
-            </a>
-                <p class="article-summary">
-                    How to create custom urls with Pelican.
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/mike-barkas.html">Mike Barkas</a>
-                 on Saturday January 02, 2016
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/2015/getting-started-with-vim" rel="bookmark" title="Permalink to Getting Started with Vim">
-                <h2 class="post-title">
-                    Getting Started with Vim
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Getting started with the Vim text editor.
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/mike-barkas.html">Mike Barkas</a>
-                 on Wednesday September 09, 2015
-            </p>
+    <!-- Post Content -->
+    <article>
+        <div class="section" id="id1">
+<h2>Remove your terminal history on remote servers</h2>
+<p>Many command line programs have a history storing mechanism that is designed to
+assist the user in quickly displaying the commands they previously have run.
+The purpose is to relieve typing the commands each time and remembering the
+syntax or flag options the program provides.</p>
+<p>Some of the commands you may enter in your development or remote server's shell
+terminal programs may contain sensitive information. A few information examples
+could be database usernames and/or passwords, network service end-points or
+hostnames, and IP addresses.</p>
+<p>The information you may think is not too sensitive is very valuable to an
+attacker scoping out a network. Network intruders can take small pieces of
+information and assemble them into something that is meaningful.</p>
+<p>When logging out of development or remote servers, its good practice to
+remove some of your sensitive history. A common pivot point for network
+intruders is to find user accounts on the system and check what they can find
+from them.</p>
+<p>Most shell programs will have a logout hook or trigger that is implemented when
+you log out of your remote terminal. You should hook into these triggers and
+empty out your history files that save your information.</p>
+<p>Here is an example of cleaning out your terminal command history for Mysql and
+Bash.</p>
+<p>I use the Bash built-in <code>:</code> operator to empty the contents of the
+<code>.mysql_history</code> and <code>.bash_history</code> files. Removing the history files will work as
+well. The point is to remove the contents of your history files.</p>
+<p>Conditionally check if the file exists, so the script won't return an error
+code. Make your scripts more dependable by not making assumptions and
+conditionally checking before executing.</p>
+<p>My example is using Bash on a Linux operating system.</p>
+<p>This example code will go in the logout file of your shell and may be different
+than my example.</p>
+<hr class="docutils" />
+<p>The logout file is automatically run when you log out of the Bash terminal.</p>
+<p><code>~/.bash_logout</code></p>
+</div>
+<div class="section" id="example-removing-mysql-history">
+<h2>Example removing mysql_history</h2>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">[[</span> -f ~/.mysql_history <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+  : &gt; ~/.mysql_history
+<span class="k">fi</span>
+</pre></div>
+</div>
+<div class="section" id="example-removing-bash-history">
+<h2>Example removing bash_history</h2>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">[[</span> -f ~/.bash_history <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+  : &gt; ~/.bash_history
+<span class="k">fi</span>
+</pre></div>
+<p>The code snippets above check if the file exists, and if it does, remove its
+contents.</p>
+<hr class="docutils" />
+<p>There are other systems and history mechanisms that vary by system and
+architecture of your environment. Take a look in your system and ask your
+system administrator or devops people for assistance. It is common that history
+files may be a hidden type of file and you will have to look for them.</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary</h2>
+<p>Use your shell's logout hook or triggering mechanism to remove the sensitive
+information that may exist in your history files.</p>
+</div>
+
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/bash.html">bash</a>, <a href="/tag/command-line.html">command-line</a>, <a href="/tag/security.html">security</a></p>
         </div>
 
     <hr>
-    <!-- Pager -->
-    <ul class="pager">
-        <li class="next">
-                <a href="/category/misc.html"> &larr; Newest Posts</a>
-        </li>
-    </ul>
-    Page 2 / 2
-    <hr>
+
             </div>
         </div>
     </div>
