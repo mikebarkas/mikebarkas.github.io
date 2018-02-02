@@ -23,8 +23,9 @@
 
 
 
+      <meta name="description" content="How to clear terminal history and delete bash history when
+logging out of a remote terminal session.">
 
-    <meta name="description" content="How to clear remote Bash command history">
 
         <meta name="author" content="Mike Barkas">
 
@@ -111,7 +112,7 @@ from them.</p>
 <p>Most shell programs will have a logout hook or trigger that is implemented when
 you log out of your remote terminal. You should hook into these triggers and
 empty out your history files that save your information.</p>
-<p>Here is an example of cleaning out your terminal command history for Mysql and
+<p>Here is an example of cleaning out your terminal command history for MySQL and
 Bash.</p>
 <p>I use the Bash built-in <code>:</code> operator to empty the contents of the
 <code>.mysql_history</code> and <code>.bash_history</code> files. Removing the history files will work as
@@ -128,16 +129,16 @@ than my example.</p>
 </div>
 <div class="section" id="example-removing-mysql-history">
 <h2>Example removing mysql_history</h2>
-<div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">[[</span> -f ~/.mysql_history <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
-  : &gt; ~/.mysql_history
-<span class="k">fi</span>
+<div class="highlight"><pre><span></span><span class="x">if [[ -f ~/.mysql_history ]]; then</span>
+<span class="x">  : &gt; ~/.mysql_history</span>
+<span class="x">fi</span>
 </pre></div>
 </div>
 <div class="section" id="example-removing-bash-history">
 <h2>Example removing bash_history</h2>
-<div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">[[</span> -f ~/.bash_history <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
-  : &gt; ~/.bash_history
-<span class="k">fi</span>
+<div class="highlight"><pre><span></span><span class="x">if [[ -f ~/.bash_history ]]; then</span>
+<span class="x">  : &gt; ~/.bash_history</span>
+<span class="x">fi</span>
 </pre></div>
 <p>The code snippets above check if the file exists, and if it does, remove its
 contents.</p>
