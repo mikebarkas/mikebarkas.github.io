@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>Git Alias with Arguments</title>
+
+  <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/theme/css/clean-blog.css" rel="stylesheet">
+      <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600' rel='stylesheet' type='text/css'>
+
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+      <meta name="description" content="How to make Git aliases and Bash funcitons with options. Git
+aliases with multiple commands and with a pipe allows you to use
+shell commands and variables.">
+
+
+        <meta name="author" content="Mike Barkas">
+
+        <meta name="tags" content="git">
+        <meta name="tags" content="bash">
+        <meta name="tags" content="command-line">
+
+	    <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Mike Barkas">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/mike-barkas.html">
+	<meta property="og:url" content="/2018/git-alias-bash-functions-with-arguments">
+	<meta property="og:title" content="Git Alias with Arguments">
+	<meta property="article:published_time" content="2018-02-01 00:00:00-05:00">
+            <meta property="og:description" content="How to make Git aliases with parameters">
+
+            <meta property="og:image" content="/theme/images/post-bg.jpg">
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Mike Barkas</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/tags.html">tags</a></li>
+
+                            <li><a href="/about-mike-barkas-software-developer">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Git Alias with Arguments</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/mike-barkas.html">Mike Barkas</a>
+                             on Thursday February 01, 2018
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <div class="section" id="git-commands-with-parameters">
+<h2>Git Commands with Parameters</h2>
+<p>It is common to create aliases to command-line programs you use often when working in a terminal. The Bash aliases help reduce typing and trying to remember all the program options that are available at the command-line.</p>
+<p>In this article I try to describe a few different methods I use to make specific aliases for Git commands. Some of the Git aliases are a simple shortcut to the command to reduce redundant typing. There are a couple different ways to implement these simple shortcuts and I give examples below. There are also more complex Git commands that you may want to run with an alias. These commands become complex when needing to call a function and possibly including parameters or running multiple commands.</p>
+<p>There are many opinions of what makes a useful alias of the shortest or most clever shortcut. You will need to decide what is best for your workflow and how you remember them.</p>
+</div>
+<div class="section" id="git-config">
+<h2>Git Config</h2>
+<p>The most common way to add a simple Git alias to reduce typing is in your <code>.gitconfig</code> file. This file should be located in your home directory on Unix and Linux type systems.</p>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="n">alias</span><span class="p">]</span>
+    <span class="n">co</span> <span class="o">=</span> <span class="n">checkout</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">log</span> <span class="o">--</span><span class="n">oneline</span> <span class="o">--</span><span class="n">graph</span>
+</pre></div>
+<p>The above examples will create the <code>co</code> shortcut for <code>checkout</code>. This will save you from having to type out the word &quot;checkout&quot;, and shorten it to &quot;co&quot;.
+The shortcut <code>l</code> will result in the same as typing out <code>log --oneline --graph</code>, and that will save a lot of typing.</p>
+<p>The aliases created in the config file above will apply your shortcut in the Git program. You will still have to initiate the Git program and append your alias. Example <code>git l</code></p>
+</div>
+<hr class="docutils" />
+<div class="section" id="bash-alias-for-git-commands">
+<h2>Bash Alias for Git Commands</h2>
+<p>I am using the Bash shell in my examples. The same concept can apply to different shell programs and the syntax may be a little different.</p>
+<p>As opposed to using the Git configuration file for my aliases, I usually make my common Git aliases in the same way as a Bash alias. In your shell configuration files you can define aliases.</p>
+<p>This example defines the alias in the home directory <code>~/.bash_profile</code></p>
+<div class="highlight"><pre><span></span><span class="x">alias gco=&quot;git checkout&quot;</span>
+<span class="x">alias gl=&quot;git log --oneline --graph&quot;</span>
+</pre></div>
+<p>Compare this type of alias with the Git config example above. The difference is the program execution of &quot;git&quot; is included in the alias. This means you will only have to type <code>gl</code> to execute the full command of <code>git log --oneline --graph</code>. Note the syntax and spacing in Bash config files.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="git-aliases-with-functions">
+<h2>Git Aliases with Functions</h2>
+<p>If you need to do more advanced things or pipe multiple Git commands together, you can start a shell process to run more complex logic by using functions. You can think of these functions as anonymous functions that get defined and then immediately invoked each time you call your alias. Starting your alias definition with a <code>!</code> will allow for your shell function definitions.</p>
+<p>These examples are done in your <code>.gitconfig</code> file and should be found in your home directory.</p>
+<div class="highlight"><pre><span></span><span class="x">[alias]</span>
+<span class="x">  example1 = &quot;!f() { echo &quot;Listing branches&quot;; git branch -vva; }; f&quot;</span>
+<span class="x">  example2 = &quot;!f() { echo &quot;value passed as parameter is ${1}&quot;; }; f&quot;</span>
+</pre></div>
+<p>In the examples above, the alias starts with <code>!</code> allowing you to run shell commands then the function is defined with <code>f() { . . . };</code>. After the definition, the function is immediately called with the last <code>f</code>.  You can substitute &quot;f&quot; with whatever you prefer. The naming convention is &quot;f&quot; meaning &quot;function&quot;.</p>
+<p>Example1 above demonstrates using a Bash command (echo) and then another statement using a Git command.</p>
+<p>Example2 demonstrates passing a parameter to your function from the command-line in the standard way Bash functions take parameters. For example using example2 like <code>example2 testvalue</code> would print out <code>value passed as a parameter is testvalue</code>.</p>
+<p>The examples above are not very exciting, but are simple to demonstrate the structure and how they are used. You can use your imagination how powerful this can be in your daily workflow.</p>
+</div>
+<div class="section" id="git-alias-in-your-path">
+<h2>Git Alias in Your Path</h2>
+<p>Git provides a mechanism for parsing and finding files in your <code>$PATH</code> that may contain commands or functions. It is common to have a <code>bin</code> directory in your home directory on Linux and Unix types systems. This example is going to assume you have a <code>bin</code> directory in your home directory and it is in your <code>$PATH</code>.</p>
+<p>Git will use files found with the naming convention of <code>git-example</code> and run the code in these files using the alias <code>example</code>. Git removes the <code>git-</code> part. These files also need to have the executable bit set.</p>
+<p>Example git file and directory: <code>~/bin/git-example</code></p>
+<p>This example file will contain your shell commands and Git commands and you can pass parameters to them from the command-line like any other shell program.</p>
+<p>Example file contents:</p>
+<div class="highlight"><pre><span></span><span class="x">#!/bin/sh</span>
+
+<span class="x">echo &quot;This is the value passed as a parameter: ${1}&quot;</span>
+</pre></div>
+<p>Then you can run this alias script with <code>git example testvalue</code> and it will print out <code>This is the value passed as a parameter: testvalue</code>.</p>
+<p>All the normal shell parameters rules apply like <code>$1, $2, $&#64;</code> etc. You can create very complex functions, scripts, or any combination of Git commands as well.</p>
+<p>In my examples I am using Linux/Unix type operating systems. I also use Bash as an example and may use Bash and shell interchangeably just for reference.</p>
+<hr class="docutils" />
+<p>I try to limit how many aliases I have in general. I also consider length and complexity and how often I may use them. If I don't use an alias commonly in my daily workflow, I will consider not having it. I also may have specific aliases I used to experiment and learn with. I also think about how dependent I become of them because they are not always available on remote servers.</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary</h2>
+<p>Find Git commands you use often in your daily workflow. Make simple Git aliases to remove repetitive typing of commands you use. Experiment and build functions combining shell commands and Git commands that may take parameters from the command-line to learn with. You may even write a program to update, pull, push, or create branches.</p>
+</div>
+
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/git.html">git</a>, <a href="/tag/bash.html">bash</a>, <a href="/tag/command-line.html">command-line</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://bitbucket.org/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-bitbucket fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://instagram.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/__barkas__" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://linkedin.com/in/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Site powered by <a href="http://getpelican.com" target="_blank">Pelican</a>
+    and <a href="http://python.org" target="_blank">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/theme/js/jquery.js"></script>
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-18772830-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+
+</html>
