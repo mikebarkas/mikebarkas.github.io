@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>Environment Variables with Kubernetes Secrets</title>
+
+  <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/theme/css/clean-blog.css" rel="stylesheet">
+      <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600' rel='stylesheet' type='text/css'>
+
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+      <meta name="description" content="How to set MySQL password environment variables using Kubernetes Secrets in a Pod's container">
+
+
+        <meta name="author" content="Mike Barkas">
+
+        <meta name="tags" content="kubernetes">
+        <meta name="tags" content="command-line">
+        <meta name="tags" content="mysql">
+
+	    <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Mike Barkas">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/mike-barkas.html">
+	<meta property="og:url" content="/2020/mysql-variables-with-secrets-kubernetes">
+	<meta property="og:title" content="Environment Variables with Kubernetes Secrets">
+	<meta property="article:published_time" content="2020-01-10 00:00:00-05:00">
+            <meta property="og:description" content="How to set MySQL env vars in Kubernetes">
+
+            <meta property="og:image" content="/theme/images/post-bg.jpg">
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Mike Barkas</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/tags.html">tags</a></li>
+
+                            <li><a href="/about-mike-barkas-software-developer">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Environment Variables with Kubernetes Secrets</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/mike-barkas.html">Mike Barkas</a>
+                             on Friday January 10, 2020
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <div class="section" id="set-environment-variables-for-a-pod-s-container">
+<h2>Set Environment Variables For A Pod's Container</h2>
+<p>This article is an overview with an example of how to set environment variables for MariaDB or MySQL in
+a Kubernetes Pod container. Using Kubernetes secrets we can set environment variables in a Pod's container.</p>
+<p><strong>Note</strong>: Kubernetes secrets are not encrypted, they are encoded and can be easily read by anyone. This example is not secure and is for local development and education.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="define-a-secret-in-kubernetes">
+<h2>Define a Secret in Kubernetes</h2>
+<p>The first step is to create a secret in Kubernetes. There are multiple ways to
+create a secret. This example will create a secret from the command line. Later
+we will save the secret into a YAML file so it can be used for other containers
+in the future.</p>
+<p>There are multiple types of secrets. We are going to create a <code>generic</code> type to hold our environment variables. We can create a generic type at the command line with literal values.</p>
+<div class="highlight"><pre><span></span><span class="x">kubectl create secret generic mysqlpwd --from-literal=password=mypassword</span>
+</pre></div>
+<p>This will create a secret we can use in our Pod. This will create a secret called
+<code>mysqlpwd</code> and it will have a key named <code>password</code> with the value
+<code>mypassword</code> that is base64 encoded.</p>
+<p>It is a good idea to verify what we just created is accurate. To view the new secret and verify it is correct, run this command. This will
+display the output in YAML format and the variable will be encoded and not encrypted.</p>
+<div class="highlight"><pre><span></span><span class="x">kubectl get secret mysqlpwd -o yaml</span>
+</pre></div>
+<p>This will display our secret. Notice in the <code>data</code> section the key is <code>password</code> and the value will be base64 encoded and not
+encrypted.</p>
+<div class="highlight"><pre><span></span><span class="x">apiVersion: v1</span>
+<span class="x">data:</span>
+<span class="x">  password: bXlwYXNzd29yZA==</span>
+<span class="x">kind: Secret</span>
+<span class="x">metadata:</span>
+<span class="x">  name: mysqlpwd</span>
+<span class="x">  namespace: default</span>
+<span class="x">type: Opaque</span>
+</pre></div>
+<hr class="docutils" />
+<p>Now that we have a secret created in K8s, lets create a Pod that will use it.</p>
+<p>In the Pod's configuration YAML file, there is a container for MySQL. The
+container's <code>spec</code> section has an <code>env</code> attribute that we can use our newly
+created secret. We <code>name</code> the environment variable and get the <code>valueFrom</code>
+our secret.</p>
+<div class="highlight"><pre><span></span><span class="x">apiVersion: v1</span>
+<span class="x">kind: Pod</span>
+<span class="x">metadata:</span>
+<span class="x">  name: mysql</span>
+<span class="x">  namespace: default</span>
+<span class="x">spec:</span>
+<span class="x">  containers:</span>
+<span class="x">  - name: mysql</span>
+<span class="x">    image: mysql</span>
+<span class="x">    env:</span>
+<span class="x">    - name: MYSQL_ROOT_PASSWORD</span>
+<span class="x">      valueFrom:</span>
+<span class="x">        secretKeyRef:</span>
+<span class="x">          name: mysqlpwd</span>
+<span class="x">          key: password</span>
+</pre></div>
+<hr class="docutils" />
+<p>To see more options for <code>valueFrom</code> use <code>explain</code></p>
+<div class="highlight"><pre><span></span><span class="x">kubectl explain pod.spec.containers.env.valueFrom</span>
+</pre></div>
+<hr class="docutils" />
+<p>Create a new Pod with the above Pod configuration YAML file. The environment
+variables will be available inside the Pod's container. You can go inside the container and verify the environment variables exist.</p>
+<p>Execute an interactive shell inside the container to view the <code>env</code> variables.</p>
+<div class="highlight"><pre><span></span><span class="x">kubectl exec -it &lt;pod-name&gt; -- /bin/bash</span>
+
+<span class="x">root@mysql : /# env</span>
+<span class="x">vars list here. . .</span>
+</pre></div>
+<p>If you have multiple containers in a Pod, you will have to specify the container with <code>-c &lt;container&gt;</code> to get an interactive shell in that container.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="saving-secret-in-a-yaml-file">
+<h2>Saving Secret In A YAML File</h2>
+<p>Using the commands to create a secret, you can view the YAML and save it to a
+configuration file for future use.
+Use a combination of the output option <code>-o yaml</code> and the dry-run option <code>--dry-run</code> to see the YAML configuration.</p>
+<div class="highlight"><pre><span></span><span class="x">kubectl create secret generic myuser --from-literal=user=sue -o yaml --dry-run</span>
+</pre></div>
+<p>Once you verify it is correct you can redirect it to a YAML file.</p>
+<div class="highlight"><pre><span></span><span class="x">kubectl create secret generic myuser --from-literal=user=sue -o yaml --dry-run &gt; my-file-name.yaml</span>
+</pre></div>
+<p>Now you can use the new YAML file to create a secret for different Pods.</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary</h2>
+<p>Create generic secrets in K8s on the command line. Use the env spec in your
+Pod's container to get the valueFrom your secret. For common environment
+variables create a secrets YAML file to easily create new variables for future
+Pods.</p>
+</div>
+
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/kubernetes.html">kubernetes</a>, <a href="/tag/command-line.html">command-line</a>, <a href="/tag/mysql.html">mysql</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://bitbucket.org/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-bitbucket fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://instagram.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/__barkas__" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://linkedin.com/in/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Site powered by <a href="http://getpelican.com" target="_blank">Pelican</a>
+    and <a href="http://python.org" target="_blank">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/theme/js/jquery.js"></script>
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-18772830-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+
+</html>
