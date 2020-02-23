@@ -12,4 +12,5 @@ http://barkas.com/2017/how-to-clear-bash-command-history/
 http://barkas.com/2017/bootstrap-classes-in-django-forms/
 http://barkas.com/2018/learning-software-development/
 http://barkas.com/2018/git-alias-bash-functions-with-arguments/
+http://barkas.com/2019/setup-nfs-for-minikube-persistent-storage/
 http://barkas.com/2020/mysql-variables-with-secrets-kubernetes/
