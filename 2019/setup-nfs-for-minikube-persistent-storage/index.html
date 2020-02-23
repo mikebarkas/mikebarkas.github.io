@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>Setup NFS For Minikube</title>
+
+  <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/theme/css/clean-blog.css" rel="stylesheet">
+      <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600' rel='stylesheet' type='text/css'>
+
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+      <meta name="description" content="How to setup an NFS server in Minikube on a Linux CentOS host machine and get persistent volume mounts for your Pods.">
+
+
+        <meta name="author" content="Mike Barkas">
+
+        <meta name="tags" content="virtualbox">
+        <meta name="tags" content="kubernetes">
+        <meta name="tags" content="minikube">
+
+	    <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Mike Barkas">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/mike-barkas.html">
+	<meta property="og:url" content="/2019/setup-nfs-for-minikube-persistent-storage">
+	<meta property="og:title" content="Setup NFS For Minikube">
+	<meta property="article:published_time" content="2019-12-29 00:00:00-05:00">
+            <meta property="og:description" content="How to setup an NFS server for Minikube">
+
+            <meta property="og:image" content="/theme/images/post-bg.jpg">
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Mike Barkas</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/tags.html">tags</a></li>
+
+                            <li><a href="/about-mike-barkas-software-developer">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Setup NFS For Minikube</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/mike-barkas.html">Mike Barkas</a>
+                             on Sunday December 29, 2019
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>This article is an overview of how to setup a Network File Server (NFS) as
+persistent storage in a Minikube client. This configuration is a basic example
+and is not secure and should not be used on a public network. This is for developing and
+testing apps and services in a Kubernetes development environment.</p>
+<p>The host machine in this article is Linux CentOS 8.</p>
+<p>Process Overview</p>
+<ul class="simple">
+<li>Install and configure NFS on the Linux host</li>
+<li>Configure Minikube to be the NFS client</li>
+<li>Create a Pod to verify file share</li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="server-configuration">
+<h2>Server Configuration</h2>
+<p>Installing and configuring the host machine as a server requires root
+privileges. Either use sudo for every command or use the root account. The
+example commands below are using the root account.</p>
+<p>Install the NFS files needed for the server.</p>
+<div class="highlight"><pre><span></span><span class="x">dnf install nfs-utils</span>
+</pre></div>
+<p>Run the NFS as a service with Systemd and persist between
+reboots. Enable the nfs-server with systemctl:</p>
+<div class="highlight"><pre><span></span><span class="x">systemctl enable --now nfs-server</span>
+</pre></div>
+<p>Verify the status of the server within systemd:</p>
+<div class="highlight"><pre><span></span><span class="x">systemctl status nfs-server</span>
+</pre></div>
+<p>Partial output example showing active:</p>
+<div class="highlight"><pre><span></span><span class="x">● nfs-server.service - NFS server and services</span>
+<span class="x">  Loaded: loaded (/usr/lib/systemd/system/nfs-server.service; enabled; vendor preset: disabled)</span>
+<span class="x">  Drop-In: /run/systemd/generator/nfs-server.service.d</span>
+<span class="x">           └─order-with-mounts.conf</span>
+<span class="x">  Active: active (exited) since Fri 2019-11-22 08:52:33 EST;</span>
+<span class="x">  Process: 1710 ExecStart=/bin/sh -c if systemctl -q is-active gssproxy; then systemctl reload gssproxy ; fi (&gt;</span>
+<span class="x">  Process: 1677 ExecStart=/usr/sbin/rpc.nfsd (code=exited, status=0/SUCCESS)</span>
+</pre></div>
+<p>For development and testing, this configuration should be adequate. If additional settings are needed, the configuration files are located:</p>
+<div class="highlight"><pre><span></span><span class="x">/etc/nfs.conf</span>
+<span class="x">/etc/nfsmount.conf</span>
+</pre></div>
+<hr class="docutils" />
+<p><strong>NFS Exports</strong></p>
+<p>Now that the server is running we need to expose directories to host files on
+the network. NFS uses a term called <em>exports</em> to define the directory structure
+and availability.</p>
+<p>Create a directory to hold the files and export settings. A common place to
+create the directory is either <code>/mnt</code> or <code>/srv</code> on the host
+computer. I like to use <em>srv</em> on the server and mount directories on the client
+in the <em>mnt</em> directory. The naming convention for the directory structure is up
+to you. This is a simple example with <em>nfsshare</em>.</p>
+<div class="highlight"><pre><span></span><span class="x">mkdir -p /srv/nfsshare</span>
+</pre></div>
+<p>Configure the NFS exports with the newly created <em>nfsshare</em> directory.</p>
+<p>The exports settings file describes the available directories and the clients
+that can access them. It also will contain limitations for these clients.</p>
+<p>Use Vim to edit and create the exports settings file:</p>
+<div class="highlight"><pre><span></span><span class="x">vim /etc/exports</span>
+</pre></div>
+<p>The basic layout of the settings are:</p>
+<div class="highlight"><pre><span></span><span class="x">/server/directory/share  client(settings)</span>
+</pre></div>
+<p>The client can be defined using a hostname or an IP address. The IP address can be
+expressed in different ways to identify client computers that are allowed to
+connect.</p>
+<p>Example Exports settings:</p>
+<div class="highlight"><pre><span></span><span class="x"># An IP address of a specific machine</span>
+<span class="x">/srv/nfsshare/www  192.168.1.100(rw,sync,no_root_squash)</span>
+
+<span class="x"># Using CIDR notation for a subnet for read only</span>
+<span class="x">/srv/nfsshare/backup  192.168.1.0/24(ro,sync,no_root_squash)</span>
+</pre></div>
+<p>There are many options for permissions and security. This development environment
+will have minimal settings to get the server working and is not secure for a
+public network.</p>
+<p>In the Minikube development environment we can set the access open to all IPs using
+a wildcard example:</p>
+<div class="highlight"><pre><span></span><span class="x">/srv/nfsshare/data  *(rw,sync,no_subtree_check,no_root_squash,insecure)</span>
+</pre></div>
+<p>This will help make configuration simple for the Minikube client.</p>
+<p>For more information on NFS export settings: <a class="reference external" href="https://linux.die.net/man/5/exports">https://linux.die.net/man/5/exports</a></p>
+<p>After the exports file is created or edited you will need to run a command to
+reload the settings. Run the <em>exportfs</em> command with reload option:</p>
+<div class="highlight"><pre><span></span><span class="x">exportfs -ra</span>
+</pre></div>
+<p>Then you can verify what is available with:</p>
+<div class="highlight"><pre><span></span><span class="x">exportfs -v</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="server-firewall-configuration">
+<h2>Server Firewall Configuration</h2>
+<p>If your host machine has a firewall running, you will need to allow the NFS
+service through it. You could also disable the firewall, but not recommended.</p>
+<p>On CentOS 8 the firewall can be configured with <em>firewall-cmd</em> command.</p>
+<p>Using the <em>firewall-cmd</em> you can get the services, and you will need to add
+services and make them permanent. Then you will need to reload the settings.</p>
+<p>Get the services and note that nfs is in the list:</p>
+<div class="highlight"><pre><span></span><span class="x">firewall-cmd --get-services</span>
+</pre></div>
+<p>Next add the <em>nfs, mountd, rpc-bind</em> services into the firewall and make them
+permanent.</p>
+<div class="highlight"><pre><span></span><span class="x">firewall-cmd --add-service nfs --permanent</span>
+<span class="x">firewall-cmd --add-service mountd --permanent</span>
+<span class="x">firewall-cmd --add-service nfs --permanent</span>
+</pre></div>
+<p>Then reload the firewall settings with:</p>
+<div class="highlight"><pre><span></span><span class="x">firewall-cmd --reload</span>
+</pre></div>
+<p>Verify the NFS service is in the firewall settings with:</p>
+<div class="highlight"><pre><span></span><span class="x">firewall-cmd --list-all</span>
+</pre></div>
+<p>The server should now be configured and the next step is to setup Minikube as a
+NFS client to share the persistent files.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="client-configuration">
+<h2>Client Configuration</h2>
+<p>The Linux computer is the host and the NFS server. Minikube is installed on the
+host computer and Minikube is the NFS client. You will need to SSH into the
+Minikube instance and configure it to be the NFS client.</p>
+<p>Minikube uses boot2docker image so you could manually use SSH to login. The
+username is <code>docker</code> and the password would be <code>tcuser</code>.</p>
+<p>You can get the Minikube IP address with: <code>minikube ip</code> command.</p>
+<p>Minikube provides a nice command to SSH into it.
+To SSH into your Minikube instance use: <code>minikube ssh</code> command.</p>
+<div class="highlight"><pre><span></span><span class="x">minikube ssh</span>
+<span class="x">                         _             _</span>
+<span class="x">            _         _ ( )           ( )</span>
+<span class="x">  ___ ___  (_)  ___  (_)| |/&#39;)  _   _ | |_      __</span>
+<span class="x">/&#39; _ ` _ `\| |/&#39; _ `\| || , &lt;  ( ) ( )| &#39;_`\  /&#39;__`\</span>
+<span class="x">| ( ) ( ) || || ( ) || || |\`\ | (_) || |_) )(  ___/</span>
+<span class="x">(_) (_) (_)(_)(_) (_)(_)(_) (_)`\___/&#39;(_,__/&#39;`\____)</span>
+
+<span class="x">$</span>
+</pre></div>
+<p>You are now logged into the Minikube VM as the docker user.</p>
+<p>Switch to the root user to configure a mount as a persistent
+volume.</p>
+<div class="highlight"><pre><span></span><span class="x">$ su -</span>
+<span class="x">#</span>
+</pre></div>
+<p>After switching to the root user, the command prompt will change to <code>#</code></p>
+<p>It is a good idea to verify the Minikube VM can communicate with the NFS server
+host. Use ping to verify communication by using the IP address of the Linux
+host that is hosting the NFS server. Limit the ping command to 2 with <code>-c
+2</code> so it will stop pinging.</p>
+<div class="highlight"><pre><span></span><span class="x"># ping -c 2 192.168.1.100</span>
+<span class="x">PING 192.168.1.100 (192.168.1.100): 56 data bytes</span>
+<span class="x">64 bytes from 192.168.1.100: seq=0 ttl=63 time=0.322 ms</span>
+<span class="x">64 bytes from 192.168.1.100: seq=1 ttl=63 time=0.301 ms</span>
+
+<span class="x">--- 192.168.1.100 ping statistics ---</span>
+<span class="x">2 packets transmitted, 2 packets received, 0% packet loss</span>
+<span class="x">round-trip min/avg/max = 0.301/0.311/0.322 ms</span>
+<span class="x">#</span>
+</pre></div>
+<p>Now that the client and server can communicate, lets set up the NFS client in
+Minikube.</p>
+<p>Create a mount in Minikube as the NFS client. Kubernetes will handle mapping the directories and mounts for your containers and
+volumeMounts.</p>
+<p>Create an NFS mount:</p>
+<div class="highlight"><pre><span></span><span class="x">mount -t nfs 192.168.1.100:/srv/nfsshare/data /mnt</span>
+</pre></div>
+<p>The mount command needs the source that is the NFS server IP address and
+absolute path to the shared directory. And this will mount in <code>/mnt</code> in Minikube
+so the Pods will have access.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="persistent-volume-in-a-pod">
+<h2>Persistent Volume In A Pod</h2>
+<p>To verify a Pod will have acces to the files from the NFS server, create a
+Persistent Volume (PV) that uses the <em>nfs</em> type in its <em>spec</em> and create a Persistent Volume
+Claim (PVC) that uses that new PV. Also make sure there are files in the NFS server to test
+with.</p>
+<p>Create a Pod to verify the Container has access to files served by the NFS
+server. Use an existing Pod or use this example for testing.</p>
+<div class="highlight"><pre><span></span><span class="x">kind: Pod</span>
+<span class="x">apiVersion: v1</span>
+<span class="x">metadata:</span>
+<span class="x">   name: nfs-pod</span>
+<span class="x">spec:</span>
+<span class="x">  volumes:</span>
+<span class="x">    - name: nfs-pv</span>
+<span class="x">      persistentVolumeClaim:</span>
+<span class="x">        claimName: nfs-pv-claim</span>
+<span class="x">  containers:</span>
+<span class="x">    - name: nfs-client</span>
+<span class="x">      image: centos:7</span>
+<span class="x">      command:</span>
+<span class="x">        - sleep</span>
+<span class="x">        - &quot;3600&quot;</span>
+<span class="x">      volumeMounts:</span>
+<span class="x">        - name: nfs-pv</span>
+<span class="x">          mountPath: &quot;/nfsshare&quot;</span>
+</pre></div>
+<p>Save the above in a file called <code>nfs-pod.yaml</code>. This will create a container long enough for
+testing the NFS client and server.</p>
+<p>Start this Pod with <em>kubectl</em> using the file provided option.</p>
+<div class="highlight"><pre><span></span><span class="x">kubectl create -f nfs-pod.yaml</span>
+</pre></div>
+<p>Once the Pod is running, use an interactive shell to examine the shared
+directory from the NFS server.</p>
+<p>This command will execute <code>exec</code> an interactive shell <code>-it</code> in the
+Container and asking to run a Bash shell <code>/bin/bash</code>.</p>
+<div class="highlight"><pre><span></span><span class="x">kubectl exec -it nfs-pod -- /bin/bash</span>
+</pre></div>
+<p>Now verify the contents of the NFS shared volume by listing <code>ls</code> the
+contents.</p>
+<div class="highlight"><pre><span></span><span class="x">ls /nfsshare</span>
+</pre></div>
+<p>Example command and output:</p>
+<div class="highlight"><pre><span></span><span class="x">kubectl exec -it nfs-pod -- /bin/bash</span>
+<span class="x">[root@nfs-pod /]# ls /nfsshare</span>
+<span class="x">file-one.txt  file-three.txt  file-two.txt  test-folder</span>
+<span class="x">[root@nfs-pod /]# exit</span>
+<span class="x">exit</span>
+</pre></div>
+<p>Verify there are files in the NFS server to test read access. Also try creating
+a file from inside the container and verify it is visible from the server.</p>
+<p>Now that the NFS share has been created and verified, the same concept can be
+used in more complex file sharing needs in Kubernetes Deployments.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="remove-and-clean-up">
+<h2>Remove And Clean Up</h2>
+<p>Remember to delete the example PVs and Pods after testing the NFS client and server communication in the Container. Delete the Pod and then the PVC and finally the PV.</p>
+</div>
+
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/virtualbox.html">virtualbox</a>, <a href="/tag/kubernetes.html">kubernetes</a>, <a href="/tag/minikube.html">minikube</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://bitbucket.org/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-bitbucket fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://instagram.com/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/__barkas__" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://linkedin.com/in/mikebarkas" target="_blank">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Site powered by <a href="http://getpelican.com" target="_blank">Pelican</a>
+    and <a href="http://python.org" target="_blank">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/theme/js/jquery.js"></script>
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-18772830-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+
+</html>
